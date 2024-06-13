@@ -1,6 +1,5 @@
 import { Client, LocalAuth } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode-terminal';
-import { ConfigService } from '@nestjs/config';
 
 export class ClientInfo {
   public id: string;
@@ -38,12 +37,12 @@ export class ClientInfo {
       console.log(`WhatsApp client ${id} is ready!`);
     });
 
-    this.client.on('message_create', message => {
+    this.client.on('message_create', (message) => {
       if (message.body === '!ping') {
         console.log(`Message received from ${id}: ${message.body}`);
-        this.client.sendMessage(message.from, 'pong')
+        this.client.sendMessage(message.from, 'pong');
       }
-    })
+    });
 
     this.client.on('disconnected', (message) => {
       console.log(`WhatsApp client ${id} was disconnected!`);

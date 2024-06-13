@@ -28,7 +28,7 @@ import { SendMessageFileWppDto } from './dto/send-message-file-wpp.dto';
 @UseGuards(JwtAuthGuard)
 @Controller('wpp')
 export class WppController {
-  constructor(private readonly wppService: WppService) { }
+  constructor(private readonly wppService: WppService) {}
 
   @Get('start')
   @ApiOperation({ summary: 'Start client' })
@@ -54,10 +54,7 @@ export class WppController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async qrCode(@Request() req): Promise<BaseResponse> {
     const qrCode = await this.wppService.getQrCode(req.user.phone);
-    return buildSuccessResponse(
-      true,
-      qrCode,
-    );
+    return buildSuccessResponse(true, qrCode);
   }
 
   @Get('checkClient')
@@ -69,10 +66,7 @@ export class WppController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async checkClient(@Request() req): Promise<BaseResponse> {
     const clientData = await this.wppService.checkClient(req.user.phone);
-    return buildSuccessResponse(
-      true,
-      clientData,
-    );
+    return buildSuccessResponse(true, clientData);
   }
 
   @Post('sendActiveMessage')
@@ -82,7 +76,10 @@ export class WppController {
     description: 'The message has been successfully sent.',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async sendMessage(@Request() req, @Body() body: SendMessageWppDto): Promise<BaseResponse> {
+  async sendMessage(
+    @Request() req,
+    @Body() body: SendMessageWppDto,
+  ): Promise<BaseResponse> {
     await this.wppService.sendMessage(req.user.phone, body);
     return buildSuccessResponse(
       true,
@@ -97,7 +94,10 @@ export class WppController {
     description: 'The message has been successfully sent.',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async sendFileMessage(@Request() req, @Body() body: SendMessageFileWppDto): Promise<BaseResponse> {
+  async sendFileMessage(
+    @Request() req,
+    @Body() body: SendMessageFileWppDto,
+  ): Promise<BaseResponse> {
     await this.wppService.sendFileMessage(req.user.phone, body);
     return buildSuccessResponse(
       true,

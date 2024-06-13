@@ -9,9 +9,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class WppService {
-  constructor(
-    private configService: ConfigService,
-  ) { }
+  constructor(private configService: ConfigService) {}
 
   private clients: Map<string, ClientInfo> = new Map();
 
@@ -45,17 +43,20 @@ export class WppService {
 
     const wppClient = this.getClient(id).client;
 
-    const requestArray = send.map(async s => {
-      const isExistContact = await wppClient?.getNumberId(s.to)
+    const requestArray = send.map(async (s) => {
+      const isExistContact = await wppClient?.getNumberId(s.to);
 
       if (isNullOrUndefined(isExistContact)) {
-        return
+        return;
       }
 
-      return await wppClient?.sendMessage(addUsWpp(s.to), handledMessage(message, s.params))
-    })
+      return await wppClient?.sendMessage(
+        addUsWpp(s.to),
+        handledMessage(message, s.params),
+      );
+    });
 
-    void Promise.all(requestArray)
+    void Promise.all(requestArray);
   }
 
   async sendFileMessage(id: string, data: SendMessageFileWppDto) {
@@ -63,22 +64,21 @@ export class WppService {
 
     const wppClient = this.getClient(id).client;
 
-    const requestArray = send.map(async s => {
-      const isExistContact = await wppClient?.getNumberId(s.to)
+    const requestArray = send.map(async (s) => {
+      const isExistContact = await wppClient?.getNumberId(s.to);
 
       if (isNullOrUndefined(isExistContact)) {
-        return
+        return;
       }
 
-      const media = new MessageMedia(file.type, file.data, file.name)
+      const media = new MessageMedia(file.type, file.data, file.name);
 
-      return await wppClient?.sendMessage(
-        addUsWpp(s.to),
-        media,
-        { caption: handledMessage(message, s.params) })
-    })
+      return await wppClient?.sendMessage(addUsWpp(s.to), media, {
+        caption: handledMessage(message, s.params),
+      });
+    });
 
-    void Promise.all(requestArray)
+    void Promise.all(requestArray);
   }
 
   async destroyClient(id: string) {
