@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ClientInfo } from './classes/client-info';
 
 @Injectable()
@@ -10,15 +10,28 @@ export class WppService {
     this.clients.set(id, clientInfo);
   }
 
-  getClient(id: string): ClientInfo | undefined {
-    return this.clients.get(id);
+  private getClient(id: string): ClientInfo | undefined {
+    const clientInfo = this.clients.get(id);
+    if (!clientInfo) {
+      throw new HttpException(`Client ${id} not found`, HttpStatus.NOT_FOUND);
+    }
+
+    return clientInfo;
+  }
+
+  getQrCode(id: string): string {
+    return this.getClient(id).qrCode;
+  }
+
+  checkClient(id: string) {
+    const clientInfo = this.getClient(id);
+
+    return clientInfo.client.info;
   }
 
   async sendMessage(id: string, number: string, message: string) {
     const clientInfo = this.getClient(id);
-    if (!clientInfo) {
-      throw new Error(`Client with id ${id} not found`);
-    }
+
     await clientInfo.sendMessage(number, message);
   }
 

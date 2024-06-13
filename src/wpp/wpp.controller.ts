@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Request,
+  Get,
 } from '@nestjs/common';
 import { WppService } from './wpp.service';
 import {
@@ -26,9 +27,9 @@ import {
 @UseGuards(JwtAuthGuard)
 @Controller('wpp')
 export class WppController {
-  constructor(private readonly wppService: WppService) {}
+  constructor(private readonly wppService: WppService) { }
 
-  @Post('start')
+  @Get('start')
   @ApiOperation({ summary: 'Start client' })
   @ApiResponse({
     status: 200,
@@ -40,6 +41,36 @@ export class WppController {
     return buildSuccessResponse(
       true,
       'The client has been successfully start.',
+    );
+  }
+
+  @Get('qrcode')
+  @ApiOperation({ summary: 'Check if qrCode returned' })
+  @ApiResponse({
+    status: 200,
+    description: '',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  async qrCode(@Request() req): Promise<BaseResponse> {
+    const qrCode = await this.wppService.getQrCode(req.user.phone);
+    return buildSuccessResponse(
+      true,
+      qrCode,
+    );
+  }
+
+  @Get('checkClient')
+  @ApiOperation({ summary: 'Check if client is connected' })
+  @ApiResponse({
+    status: 200,
+    description: '',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  async checkClient(@Request() req): Promise<BaseResponse> {
+    const clientData = await this.wppService.checkClient(req.user.phone);
+    return buildSuccessResponse(
+      true,
+      clientData,
     );
   }
 

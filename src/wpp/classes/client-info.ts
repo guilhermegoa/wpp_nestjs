@@ -3,6 +3,7 @@ import * as qrcode from 'qrcode-terminal';
 
 export class ClientInfo {
   public id: string;
+  public qrCode: string = null;
   public client: Client;
 
   constructor(id: string) {
@@ -27,6 +28,7 @@ export class ClientInfo {
 
     this.client.on('qr', (qr) => {
       qrcode.generate(qr, { small: true });
+      this.qrCode = qr;
     });
 
     this.client.on('ready', () => {
