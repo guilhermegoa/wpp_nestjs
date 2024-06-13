@@ -1,10 +1,13 @@
-import { Controller, Post, Body, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Body, Delete, Param, UseGuards, Request } from '@nestjs/common';
 import { WppService } from './wpp.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SendMessageWppDto } from './dto/send-message-wpp.dto';
 import { StartWppDto } from './dto/start-wpp.dto';
+import { JwtAuthGuard } from 'src/auth/utils/jwt-auth.guard';
 
 @ApiTags('wpp')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('wpp')
 export class WppController {
   constructor(private readonly wppService: WppService) { }
@@ -28,7 +31,7 @@ export class WppController {
   }
 
   @Delete('destroy/:id')
-  async destroyClient(@Param('id') id: string) {
+  async destroyClient(@Request() req, @Param('id') id: string) {
     await this.wppService.destroyClient(id);
     return { success: true };
   }
