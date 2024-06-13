@@ -6,7 +6,7 @@ import { TokenAuthDto } from './dto/token-auth.dto';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('token')
   @ApiOperation({ summary: 'Get token to api' })

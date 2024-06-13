@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WppModule } from './wpp/wpp.module';
@@ -24,5 +24,5 @@ import { APP_PIPE } from '@nestjs/core';
   ],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) { }
+  configure() {}
 }

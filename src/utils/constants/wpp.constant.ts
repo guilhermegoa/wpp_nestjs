@@ -1,3 +1,3 @@
 export default {
-  usWpp: '@c.us'
-}
+  usWpp: '@c.us',
+};

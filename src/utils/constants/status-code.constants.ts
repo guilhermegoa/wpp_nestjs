@@ -40,7 +40,7 @@ export default {
   415: 'Unsupported Media Type (RFC 7231)',
   416: 'Range Not Satisfiable (RFC 7233)',
   417: 'Expectation Failed',
-  418: 'I\'m a teapot (RFC 2324\', RFC 7168)',
+  418: "I'm a teapot (RFC 2324', RFC 7168)",
   421: 'Misdirected Request (RFC 7540)',
   422: 'Unprocessable Entity (WebDAV; RFC 4918)',
   423: 'Locked (WebDAV; RFC 4918)',
@@ -61,5 +61,5 @@ export default {
   507: 'Insufficient Storage (WebDAV; RFC 4918)',
   508: 'Loop Detected (WebDAV; RFC 5842)',
   510: 'Not Extended (RFC 2774)',
-  511: 'Network Authentication Required (RFC 6585)'
-}
+  511: 'Network Authentication Required (RFC 6585)',
+};
