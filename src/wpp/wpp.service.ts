@@ -1,12 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ClientInfo } from './classes/client-info';
+import { SendMessageWppDto } from './dto/send-message-wpp.dto';
+import { isNullOrUndefined } from 'src/utils/functions/checks.function';
+import { addUsWpp, handledMessage } from 'src/utils/functions/wpp.function';
+import { SendMessageFileWppDto } from './dto/send-message-file-wpp.dto';
+import { MessageMedia } from 'whatsapp-web.js';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class WppService {
+  constructor(
+    private configService: ConfigService,
+  ) { }
+
   private clients: Map<string, ClientInfo> = new Map();
 
   async startClient(id: string) {
-    const clientInfo = new ClientInfo(id);
+    const env = this.configService.get<string>('API_ENV');
+    const clientInfo = new ClientInfo(env, id);
     this.clients.set(id, clientInfo);
   }
 
@@ -29,10 +40,45 @@ export class WppService {
     return clientInfo.client.info;
   }
 
-  async sendMessage(id: string, number: string, message: string) {
-    const clientInfo = this.getClient(id);
+  async sendMessage(id: string, data: SendMessageWppDto) {
+    const { message, send } = data;
 
-    await clientInfo.sendMessage(number, message);
+    const wppClient = this.getClient(id).client;
+
+    const requestArray = send.map(async s => {
+      const isExistContact = await wppClient?.getNumberId(s.to)
+
+      if (isNullOrUndefined(isExistContact)) {
+        return
+      }
+
+      return await wppClient?.sendMessage(addUsWpp(s.to), handledMessage(message, s.params))
+    })
+
+    void Promise.all(requestArray)
+  }
+
+  async sendFileMessage(id: string, data: SendMessageFileWppDto) {
+    const { message, send, file } = data;
+
+    const wppClient = this.getClient(id).client;
+
+    const requestArray = send.map(async s => {
+      const isExistContact = await wppClient?.getNumberId(s.to)
+
+      if (isNullOrUndefined(isExistContact)) {
+        return
+      }
+
+      const media = new MessageMedia(file.type, file.data, file.name)
+
+      return await wppClient?.sendMessage(
+        addUsWpp(s.to),
+        media,
+        { caption: handledMessage(message, s.params) })
+    })
+
+    void Promise.all(requestArray)
   }
 
   async destroyClient(id: string) {

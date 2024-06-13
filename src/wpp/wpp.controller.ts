@@ -21,6 +21,7 @@ import {
   BaseResponse,
   buildSuccessResponse,
 } from 'src/utils/functions/responses.function';
+import { SendMessageFileWppDto } from './dto/send-message-file-wpp.dto';
 
 @ApiTags('wpp')
 @ApiBearerAuth()
@@ -74,15 +75,30 @@ export class WppController {
     );
   }
 
-  @Post('sendMessage')
+  @Post('sendActiveMessage')
   @ApiOperation({ summary: 'Send a message' })
   @ApiResponse({
     status: 200,
     description: 'The message has been successfully sent.',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async sendMessage(@Body() body: SendMessageWppDto): Promise<BaseResponse> {
-    await this.wppService.sendMessage(body.id, body.number, body.message);
+  async sendMessage(@Request() req, @Body() body: SendMessageWppDto): Promise<BaseResponse> {
+    await this.wppService.sendMessage(req.user.phone, body);
+    return buildSuccessResponse(
+      true,
+      'The message has been successfully sent.',
+    );
+  }
+
+  @Post('sendActiveFileMessage')
+  @ApiOperation({ summary: 'Send a message' })
+  @ApiResponse({
+    status: 200,
+    description: 'The message has been successfully sent.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  async sendFileMessage(@Request() req, @Body() body: SendMessageFileWppDto): Promise<BaseResponse> {
+    await this.wppService.sendFileMessage(req.user.phone, body);
     return buildSuccessResponse(
       true,
       'The message has been successfully sent.',
