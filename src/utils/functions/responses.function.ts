@@ -29,4 +29,4 @@ function buildErrorResponse(success: boolean, error?: HttpException): BaseRespon
   }
 }
 
-export { buildSuccessResponse, buildErrorResponse }
+export { buildSuccessResponse, buildErrorResponse, BaseResponse }

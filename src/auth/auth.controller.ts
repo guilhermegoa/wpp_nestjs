@@ -13,6 +13,6 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Returned token' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async token(@Body() body: TokenAuthDto) {
-    return this.authService.token(body.username, body.password);
+    return this.authService.token(body.username, body.password, body.phone);
   }
 }

@@ -9,8 +9,8 @@ export class AuthService {
         private configService: ConfigService) {
     }
 
-    async token(username: string, password: string) {
-        const payload = { username, password };
+    async token(username: string, password: string, phone: string) {
+        const payload = { username, password, phone };
 
         const isAuthNameSucces = this.configService.get<string>('AUTH_NAME') === username
         const isAuthPasswordSucces = this.configService.get<string>('AUTH_PASSWORD') === password

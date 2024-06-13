@@ -21,6 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
         }
 
-        return { username: payload.username };
+        return { username: payload.username, phone: payload.phone };
     }
 }

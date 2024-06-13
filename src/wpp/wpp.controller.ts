@@ -2,8 +2,8 @@ import { Controller, Post, Body, Delete, Param, UseGuards, Request } from '@nest
 import { WppService } from './wpp.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SendMessageWppDto } from './dto/send-message-wpp.dto';
-import { StartWppDto } from './dto/start-wpp.dto';
 import { JwtAuthGuard } from 'src/auth/utils/jwt-auth.guard';
+import { BaseResponse, buildSuccessResponse } from 'src/utils/functions/responses.function';
 
 @ApiTags('wpp')
 @ApiBearerAuth()
@@ -16,23 +16,23 @@ export class WppController {
   @ApiOperation({ summary: 'Start client' })
   @ApiResponse({ status: 200, description: 'The client has been successfully start.' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async startClient(@Body() body: StartWppDto) {
-    await this.wppService.startClient(body.id);
-    return { success: true };
+  async startClient(@Request() req): Promise<BaseResponse> {
+    await this.wppService.startClient(req.user.phone);
+    return buildSuccessResponse(true, 'The client has been successfully start.');
   }
 
   @Post('sendMessage')
   @ApiOperation({ summary: 'Send a message' })
   @ApiResponse({ status: 200, description: 'The message has been successfully sent.' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async sendMessage(@Body() body: SendMessageWppDto) {
+  async sendMessage(@Body() body: SendMessageWppDto): Promise<BaseResponse> {
     await this.wppService.sendMessage(body.id, body.number, body.message);
-    return { success: true };
+    return buildSuccessResponse(true, 'The message has been successfully sent.');
   }
 
   @Delete('destroy/:id')
-  async destroyClient(@Request() req, @Param('id') id: string) {
+  async destroyClient(@Param('id') id: string): Promise<BaseResponse> {
     await this.wppService.destroyClient(id);
-    return { success: true };
+    return buildSuccessResponse(true, 'The client has been successfully destroyed.');
   }
 }
