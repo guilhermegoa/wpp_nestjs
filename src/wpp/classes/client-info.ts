@@ -14,18 +14,14 @@ export class ClientInfo {
       authStrategy: new LocalAuth({ clientId: id }),
       puppeteer: {
         executablePath: '/usr/bin/chromium-browser',
+        // executablePath: 'C:\\Program\ Files\\Google\\Chrome\\Application\\chrome.exe',
         headless: true,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-extensions',
         ],
-      },
-      webVersionCache: {
-        type: 'remote',
-        remotePath:
-          'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
-      },
+      }
     });
 
     this.client.on('qr', (qr) => {

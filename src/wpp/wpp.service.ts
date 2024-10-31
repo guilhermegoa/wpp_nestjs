@@ -14,6 +14,10 @@ export class WppService {
   private clients: Map<string, ClientInfo> = new Map();
 
   async startClient(id: string) {
+    if (this.clients.has(id)) {
+      throw new HttpException(`Client ${id} already exists`, HttpStatus.CONFLICT);
+    }
+    
     const env = this.configService.get<string>('API_ENV');
     const clientInfo = new ClientInfo(env, id);
     this.clients.set(id, clientInfo);
