@@ -39,11 +39,15 @@ export class WppService {
   checkClient(id: string) {
     const clientInfo = this.getClient(id);
 
-    return clientInfo.client.info;
+    return clientInfo.client.info ?? null;
   }
 
   async sendMessage(id: string, data: SendMessageWppDto) {
     const { message, send } = data;
+
+    if (this.checkClient(id) === null) {
+      throw new HttpException(`Client ${id} is not ready`, HttpStatus.NOT_ACCEPTABLE);
+    }
 
     const wppClient = this.getClient(id).client;
 
@@ -65,6 +69,10 @@ export class WppService {
 
   async sendFileMessage(id: string, data: SendMessageFileWppDto) {
     const { message, send, file } = data;
+
+    if (this.checkClient(id) === null) {
+      throw new HttpException(`Client ${id} is not ready`, HttpStatus.NOT_ACCEPTABLE);
+    }
 
     const wppClient = this.getClient(id).client;
 
