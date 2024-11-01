@@ -83,8 +83,12 @@ export class WppService {
         return;
       }
 
-      if (isNullOrUndefined(file) || isNullOrUndefined(file.data) || !isBase64(file.data)) {
-        return await wppClient?.sendMessage(addUsWpp(s.to), handledMessage(message, s.params));
+      if (isNullOrUndefined(file) || 
+        isNullOrUndefined(file.data) || 
+        file.data === '' ||
+        !isBase64(file.data))
+      {
+          return await wppClient?.sendMessage(addUsWpp(s.to), handledMessage(message, s.params));
       }
 
       const media = new MessageMedia(file.type, file.data, file.name);
