@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ClientInfo } from './classes/client-info';
 import { SendMessageWppDto } from './dto/send-message-wpp.dto';
-import { isNullOrUndefined } from 'src/utils/functions/checks.function';
+import { isBase64, isNullOrUndefined } from 'src/utils/functions/checks.function';
 import { addUsWpp, handledMessage } from 'src/utils/functions/wpp.function';
 import { SendMessageFileWppDto } from './dto/send-message-file-wpp.dto';
 import { MessageMedia } from 'whatsapp-web.js';
@@ -81,6 +81,10 @@ export class WppService {
 
       if (isNullOrUndefined(isExistContact)) {
         return;
+      }
+
+      if (isNullOrUndefined(file) || isNullOrUndefined(file.data) || !isBase64(file.data)) {
+        return await wppClient?.sendMessage(addUsWpp(s.to), handledMessage(message, s.params));
       }
 
       const media = new MessageMedia(file.type, file.data, file.name);
