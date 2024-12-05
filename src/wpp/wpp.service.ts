@@ -21,7 +21,7 @@ export class WppService {
     this.logger.log(`Starting clientId ${id}`);
 
     if (this.clients.has(id)) {
-      this.logger.error(`ClientId ${id} already exists`);
+      this.logger.warn(`ClientId ${id} already exists`);
       throw new HttpException(
         `Client ${id} already exists`,
         HttpStatus.CONFLICT,
@@ -31,14 +31,14 @@ export class WppService {
     const env = this.configService.get<string>('API_ENV');
     const clientInfo = new ClientInfo(env, id);
     this.clients.set(id, clientInfo);
-    this.logger.log(`ClientId ${clientInfo.client.info?.me.user} started`);
+    this.logger.log(`ClientId ${id} started`);
   }
 
   private getClient(id: string): ClientInfo | undefined {
     this.logger.log(`Getting clientId ${id}`);
     const clientInfo = this.clients.get(id);
     if (!clientInfo) {
-      this.logger.error(`Client ${id} not found`);
+      this.logger.warn(`Client ${id} not found`);
       throw new HttpException(`ClientId ${id} not found`, HttpStatus.NOT_FOUND);
     }
 
@@ -65,7 +65,7 @@ export class WppService {
     const { message, send } = data;
 
     if (this.checkClient(id) === null) {
-      this.logger.error(`Client ${id} is not ready`);
+      this.logger.warn(`Client ${id} is not ready`);
       throw new HttpException(
         `Client ${id} is not ready`,
         HttpStatus.NOT_ACCEPTABLE,
@@ -78,7 +78,7 @@ export class WppService {
       const isExistContact = await wppClient?.getNumberId(s.to);
 
       if (isNullOrUndefined(isExistContact)) {
-        this.logger.error(`Contact ${s.to} not found`);
+        this.logger.warn(`Contact ${s.to} not found`);
         return;
       }
 
@@ -99,7 +99,7 @@ export class WppService {
     const { message, send, file } = data;
 
     if (this.checkClient(id) === null) {
-      this.logger.error(`Client ${id} is not ready`);
+      this.logger.warn(`Client ${id} is not ready`);
       throw new HttpException(
         `Client ${id} is not ready`,
         HttpStatus.NOT_ACCEPTABLE,
@@ -115,7 +115,7 @@ export class WppService {
       const isExistContact = await wppClient?.getNumberId(s.to);
 
       if (isNullOrUndefined(isExistContact)) {
-        this.logger.error(`Contact ${s.to} not found`);
+        this.logger.warn(`Contact ${s.to} not found`);
         return;
       }
 
@@ -125,7 +125,7 @@ export class WppService {
         file.data === '' ||
         !isBase64(file.data)
       ) {
-        this.logger.error(`File data is not valid`);
+        this.logger.warn(`File data is not valid`);
         return await wppClient?.sendMessage(
           addUsWpp(s.to),
           handledMessage(message, s.params),
