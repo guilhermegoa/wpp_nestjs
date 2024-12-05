@@ -31,7 +31,7 @@ export class WppService {
     const env = this.configService.get<string>('API_ENV');
     const clientInfo = new ClientInfo(env, id);
     this.clients.set(id, clientInfo);
-    this.logger.log(`ClientId ${id} started`);
+    this.logger.log(`ClientId ${clientInfo.client.info?.me.user} started`);
   }
 
   private getClient(id: string): ClientInfo | undefined {
@@ -42,7 +42,7 @@ export class WppService {
       throw new HttpException(`ClientId ${id} not found`, HttpStatus.NOT_FOUND);
     }
 
-    this.logger.log(`Client phone ${clientInfo.client.info.me.user} found`);
+    this.logger.log(`Client phone ${clientInfo.client.info?.me.user} found`);
 
     return clientInfo;
   }
@@ -83,7 +83,7 @@ export class WppService {
       }
 
       this.logger.log(
-        `Sending message from ${wppClient.info.me.user} to ${s.to}`,
+        `Sending message from ${wppClient.info?.me.user} to ${s.to}`,
       );
       return await wppClient?.sendMessage(
         addUsWpp(s.to),
@@ -110,7 +110,7 @@ export class WppService {
 
     const requestArray = send.map(async (s) => {
       this.logger.log(
-        `Sending file message from ${wppClient.info.me.user} to ${s.to}`,
+        `Sending file message from ${wppClient.info?.me.user} to ${s.to}`,
       );
       const isExistContact = await wppClient?.getNumberId(s.to);
 
@@ -135,7 +135,7 @@ export class WppService {
       const media = new MessageMedia(file.type, file.data, file.name);
 
       this.logger.log(
-        `Sending file message from ${wppClient.info.me.user} to ${s.to}`,
+        `Sending file message from ${wppClient.info?.me.user} to ${s.to}`,
       );
       return await wppClient?.sendMessage(addUsWpp(s.to), media, {
         caption: handledMessage(message, s.params),
@@ -150,7 +150,7 @@ export class WppService {
     const clientInfo = this.clients.get(id);
     if (clientInfo) {
       this.logger.log(
-        `ClientId  ${id} with Client Phone ${clientInfo.client.info.me.user} destroyed`,
+        `ClientId  ${id} with Client Phone ${clientInfo.client.info?.me.user} destroyed`,
       );
       await clientInfo.destroy();
       this.clients.delete(id);
