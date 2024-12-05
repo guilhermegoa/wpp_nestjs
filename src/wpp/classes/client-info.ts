@@ -35,7 +35,7 @@ export class ClientInfo {
 
     this.client.on('ready', () => {
       this.logger.log(
-        `WhatsApp client phone ${this.client.info.me.user} is ready!`,
+        `WhatsApp client phone ${this.client.info?.me.user} is ready!`,
       );
     });
 
@@ -48,7 +48,7 @@ export class ClientInfo {
 
     this.client.on('disconnected', (message) => {
       this.logger.error(
-        `WhatsApp client phone ${this.client.info.me.user} was disconnected!`,
+        `WhatsApp client phone ${this.client.info?.me.user} was disconnected!`,
       );
       console.log(message);
 
