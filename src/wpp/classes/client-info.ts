@@ -47,7 +47,7 @@ export class ClientInfo {
     });
 
     this.client.on('disconnected', (message) => {
-      this.logger.error(
+      this.logger.log(
         `WhatsApp client phone ${this.client.info?.me.user} was disconnected!`,
       );
       console.log(message);
