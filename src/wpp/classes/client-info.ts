@@ -16,9 +16,9 @@ export class ClientInfo {
     this.client = new Client({
       authStrategy: new LocalAuth({ clientId: id }),
       puppeteer: {
-        // executablePath: '/usr/bin/chromium-browser',
-        executablePath:
-          'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        executablePath: '/usr/bin/chromium-browser',
+        // executablePath:
+        // 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         headless: true,
         args: [
           '--no-sandbox',
